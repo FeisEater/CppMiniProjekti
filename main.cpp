@@ -22,7 +22,7 @@ using namespace std;
 #define test(testname) void testname() { curTestName = #testname;
 
 template <typename Type>
-Type check(Type realValue, Type expectedValue);
+void check(Type realValue, Type expectedValue);
 static string curTestName;
 
 class testfail: public exception
@@ -37,33 +37,28 @@ float gimmeInt(bool fail)
 }
 
 test(noErrors)
-    check<float>(gimmeInt(true), 5);
+    (void)check<float>(gimmeInt(true), 5);
 }
 
 test(sixIsFive)
-    check<int>(5, 5);
-    check<int>(5, 6);
+    (void)check<int>(5, 5);
+    (void)check<int>(5, 6);
 }
 
 test(fiveIsFive)
-    check<int>(5, 5);
-    check<int>(4, 4);
+    (void)check<int>(5, 5);
+    (void)check<int>(4, 4);
 }
 
 test(vectorsAreEqual)
     vector<int> v1 = {1,2,3};
     vector<int> v2 = {1,2,3};
-    if (v1 != v2)
-    {
-        cout << curTestName << " failed" << endl;
-        throw testfail();
-    }
-    //check<vector<int>>(4, 4);
+    check<vector<int>>(v1, v2);
 }
 
 string gimmeString() {return NULL;}
 test(nullString)
-    check<string>(gimmeString(), "foo");
+    (void)check<string>(gimmeString(), "foo");
 }
 
 void runTests(int testCounter)
@@ -99,7 +94,7 @@ int main(int argc, char** argv) {
 }
 
 template <typename Type>
-Type check(Type realValue, Type expectedValue)
+void check(Type realValue, Type expectedValue)
 {
     if (realValue != expectedValue)
     {
