@@ -27,3 +27,8 @@ void testdriver::runTests(int testCounter, vector<void (*)()> tests)
         runTests(testCounter + 1, tests);
     }
 }
+
+void testdriver::runTests(vector<void (*)()> tests)
+{
+    runTests(0, tests);
+}

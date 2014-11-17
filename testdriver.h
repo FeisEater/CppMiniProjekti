@@ -21,18 +21,20 @@ class testdriver
 {
     public:
         void runTests(int testCounter, std::vector<void (*)()> tests);
+        void runTests(std::vector<void (*)()> tests);
         void setTestName(std::string testName) {curTestName = testName;}
         template <typename Type>
         void check(Type realValue, Type expectedValue)
         {
             if (realValue != expectedValue)
             {
-                std::cout << curTestName << " failed" << std::endl;//: expected " << expectedValue << " but was " << realValue << endl;
+                std::cout << curTestName << " failed: expected " << expectedValue << " but was " << realValue << std::endl;
                 throw testfail();
             }
         }
     private:
         std::string curTestName;
+        
 };
 
 #endif	/* TESTDRIVER_H */
