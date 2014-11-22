@@ -3,15 +3,26 @@
 
 testdriver td;
 
-test(fiveIsFive, td)
+test(initialization, td)
     GString gstring;
-    //td.check<int>(5, 5);
-    //td.check<int>(4, 6);
+    td.check<int>(gstring.getSize(), 0);
+}
+
+test(assignmentAndEquality, td)
+    GString gstring = "hello";
+    td.check<GString>(gstring, "hello");
+}
+
+test(correctSize, td)
+    GString gstring = "hello";
+    td.check<int>(gstring.getSize(), 5);
 }
 
 void runTests()
 {
     td.runTests({
-        fiveIsFive
+        initialization,
+        assignmentAndEquality,
+        correctSize
     });
 }
