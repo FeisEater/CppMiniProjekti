@@ -22,6 +22,7 @@ class testdriver
     public:
         void runTests(int testCounter, std::vector<void (*)()> tests);
         void runTests(std::vector<void (*)()> tests);
+        std::string getTestName() {return curTestName;}
         void setTestName(std::string testName) {curTestName = testName;}
         template <typename Type>
         void check(Type realValue, Type expectedValue)
@@ -36,6 +37,20 @@ class testdriver
         std::string curTestName;
         
 };
+
+#define expectException(code, exc, td) \
+    try \
+    { \
+        code; \
+        std::cout << td.getTestName() << " failed: expected " << #code << " to trigger exception " << #exc << std::endl; \
+        throw testfail(); \
+    } \
+    catch (exc const& e) \
+    {
+
+#define endExpectException \
+        return; \
+    }
 
 #endif	/* TESTDRIVER_H */
 

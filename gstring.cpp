@@ -10,6 +10,13 @@ GString::GString(const char* s) : chars(s)
     }
 }
 
+const Character &GString::operator[](int i) const
+{
+    if (i < 0 || i > size)
+        throw std::out_of_range("requested GString character index out of range");
+    return chars[i];
+}
+
 bool operator==(GString const& a, GString const& b)
 {
     if (a.getSize() != b.getSize())
