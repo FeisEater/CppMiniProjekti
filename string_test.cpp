@@ -4,17 +4,17 @@
 testdriver td;
 
 test(initialization, td)
-    GString gstring;
+    const GString gstring;
     td.check<int>(gstring.getSize(), 0);
 }
 
 test(assignmentAndEquality, td)
-    GString gstring = "hello";
+    const GString gstring = "hello";
     td.check<GString>(gstring, "hello");
 }
 
 test(correctSize, td)
-    GString gstring = "hello";
+    const GString gstring = "hello";
     td.check<int>(gstring.getSize(), 5);
 }
 
