@@ -17,14 +17,16 @@ class GString
 {
     public:
         GString() : size(0), chars(nullptr) {}
-        GString(const Character* s);
+        GString(GString const& string);
+        GString(const char* s);
+        ~GString() {delete[] chars;}
         int getSize() const   {return size;}
-        const Character &operator[](int i) const;
+        Character &operator[](int i) const;
         friend std::ostream& operator<<(std::ostream& os, const GString& obj)
             {return os << obj.chars;}
     private:
         int size;
-        const Character* chars;
+        Character* chars;
 };
 
 bool operator==(GString const& a, GString const& b);

@@ -40,11 +40,39 @@ test(correctCharacters, td)
 test(indexOutOfRange, td)
     const GString gstring = "hello";
     expectException(Character c = gstring[-1], std::out_of_range, td)
-    expectException(Character c = gstring[6], std::out_of_range, td)
+    expectException(Character c = gstring[5], std::out_of_range, td)
     endExpectException
     endExpectException
 }
 
+test(changeCharacterAtIndex, td)
+    const GString string = "hello";
+    td.check<GString>(string, "hello");
+    string[4] = 'p';
+    td.check<GString>(string, "hellp");
+    string[1] = 'a';
+    td.check<GString>(string, "hallp");
+    expectException(string[5] = 'c', std::out_of_range, td)
+    endExpectException
+}
+
+test(assigningGStringCopiesIt, td)
+    const GString string = "hello";
+    GString string2 = string;
+    string2[1] = 'a';
+    td.check<GString>(string, "hello");
+    td.check<GString>(string2, "hallo");
+}
+
+test(cantAccessAnyCharacterOnEmptyString, td)
+    const GString string = "";
+    td.check<GString>(string, "");
+    td.check<int>(string.getSize(), 0);
+    expectException(Character c = string[0], std::out_of_range, td)
+    expectException(Character c = string[1], std::out_of_range, td)
+    endExpectException
+    endExpectException
+}
 
 void runTests()
 {
@@ -56,5 +84,8 @@ void runTests()
         correctSize3,
         correctCharacters,
         indexOutOfRange,
+        changeCharacterAtIndex,
+        assigningGStringCopiesIt,
+        cantAccessAnyCharacterOnEmptyString,
     });
 }

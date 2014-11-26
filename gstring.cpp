@@ -1,18 +1,34 @@
 #include "gstring.h"
 
-GString::GString(const char* s) : chars(s)
+GString::GString(GString const& string) : size(string.size)
 {
+    chars = new Character[string.size];
+    for (int i = 0; i < string.size; i++)
+        chars[i] = string.chars[i];
+}
+
+GString::GString(const char* s)
+{
+    //first count the size
     size = 0;
-    while (*s)
+    const char *curChar = s;
+    while (*curChar)
     {
-        ++s;
+        ++curChar;
         ++size;
+    }
+    //then insert the characters
+    chars = new Character[size];
+    for (int i = 0; i < size; i++)
+    {
+        chars[i] = *s;
+        ++s;
     }
 }
 
-const Character &GString::operator[](int i) const
+Character &GString::operator[](int i) const
 {
-    if (i < 0 || i > size)
+    if (i < 0 || i >= size)
         throw std::out_of_range("requested GString character index out of range");
     return chars[i];
 }
