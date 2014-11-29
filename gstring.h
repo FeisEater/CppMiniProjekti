@@ -22,6 +22,9 @@ class GString
         ~GString() {delete[] chars;}
         int getSize() const   {return size;}
         Character &operator[](int i) const;
+        GString& operator=(GString const& string);
+        friend GString operator+(const GString& s1, const GString& s2);
+        friend GString operator+=(GString& s1, const GString& s2);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj)
             {return os << obj.chars;}
     private:

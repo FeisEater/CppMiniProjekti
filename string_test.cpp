@@ -58,7 +58,8 @@ test(changeCharacterAtIndex, td)
 
 test(assigningGStringCopiesIt, td)
     const GString string = "hello";
-    GString string2 = string;
+    GString string2 = "bye";
+    string2 = string;
     string2[1] = 'a';
     td.check<GString>(string, "hello");
     td.check<GString>(string2, "hallo");
@@ -74,6 +75,20 @@ test(cantAccessAnyCharacterOnEmptyString, td)
     endExpectException
 }
 
+test(sumOfStrings, td)
+    GString string1 = "hello";
+    const GString string2 = " world";
+    GString string3 = string1 + string2;
+    td.check<GString>(string3, "hello world");
+    const GString string4 = " mars";
+    string1 += string4;
+    td.check<GString>(string1, "hello mars");
+    GString string5 = "bye cruel" + string2 + "!";
+    td.check<GString>(string5, "bye cruel world!");
+    string5 += " I'm going to" + string4;
+    td.check<GString>(string5, "bye cruel world! I'm going to mars");
+}
+
 void runTests()
 {
     td.runTests({
@@ -87,5 +102,6 @@ void runTests()
         changeCharacterAtIndex,
         assigningGStringCopiesIt,
         cantAccessAnyCharacterOnEmptyString,
+        sumOfStrings
     });
 }
