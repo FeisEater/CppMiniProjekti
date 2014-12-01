@@ -89,6 +89,19 @@ test(sumOfStrings, td)
     td.check<GString>(string5, "bye cruel world! I'm going to mars");
 }
 
+test(iterators, td)
+    GString string = "iterate this string please";
+    Character correctChars[26] = {'i', 't', 'e', 'r', 'a', 't', 'e', ' ', 't', 'h', 'i', 's', ' ',
+        's', 't', 'r', 'i', 'n', 'g', ' ', 'p', 'l', 'e', 'a', 's', 'e'};
+    int i = 0;
+    for (Character c : string)
+    {
+        td.check<Character>(c, correctChars[i]);
+        ++i;
+    }
+    td.check<int>(i, string.getSize());
+}
+
 void runTests()
 {
     td.runTests({
@@ -102,6 +115,7 @@ void runTests()
         changeCharacterAtIndex,
         assigningGStringCopiesIt,
         cantAccessAnyCharacterOnEmptyString,
-        sumOfStrings
+        sumOfStrings,
+        iterators
     });
 }

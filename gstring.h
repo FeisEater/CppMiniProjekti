@@ -27,6 +27,8 @@ class GString
         friend GString operator+=(GString& s1, const GString& s2);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj)
             {return os << obj.chars;}
+        const Character* begin() {return chars;}
+        const Character* end() {return chars + size;}
     private:
         int size;
         Character* chars;
