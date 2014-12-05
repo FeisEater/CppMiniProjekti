@@ -25,6 +25,7 @@ class GString
         GString& operator=(GString const& string);
         friend GString operator+(const GString& s1, const GString& s2);
         friend GString operator+=(GString& s1, const GString& s2);
+        //friend std::istream& operator>>(std::ostream& is, const GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj)
             {return os << obj.chars;}
         const Character* begin() {return chars;}

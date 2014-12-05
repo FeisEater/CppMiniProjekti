@@ -78,3 +78,9 @@ GString operator+=(GString& s1, const GString& s2)
         s1[i + olds1.size] = s2[i];    
     return s1;
 }
+
+/*std::istream& operator>>(std::ostream& is, const GString& obj)
+{
+    for ()
+    return is;
+}*/

@@ -37,6 +37,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/gstring.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/nvwa/bool_array.o \
+	${OBJECTDIR}/nvwa/debug_new.o \
+	${OBJECTDIR}/nvwa/mem_pool_base.o \
+	${OBJECTDIR}/nvwa/static_mem_pool.o \
 	${OBJECTDIR}/string_test.o \
 	${OBJECTDIR}/testdriver.o
 
@@ -74,6 +78,26 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/nvwa/bool_array.o: nvwa/bool_array.cpp 
+	${MKDIR} -p ${OBJECTDIR}/nvwa
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/nvwa/bool_array.o nvwa/bool_array.cpp
+
+${OBJECTDIR}/nvwa/debug_new.o: nvwa/debug_new.cpp 
+	${MKDIR} -p ${OBJECTDIR}/nvwa
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/nvwa/debug_new.o nvwa/debug_new.cpp
+
+${OBJECTDIR}/nvwa/mem_pool_base.o: nvwa/mem_pool_base.cpp 
+	${MKDIR} -p ${OBJECTDIR}/nvwa
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/nvwa/mem_pool_base.o nvwa/mem_pool_base.cpp
+
+${OBJECTDIR}/nvwa/static_mem_pool.o: nvwa/static_mem_pool.cpp 
+	${MKDIR} -p ${OBJECTDIR}/nvwa
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/nvwa/static_mem_pool.o nvwa/static_mem_pool.cpp
 
 ${OBJECTDIR}/string_test.o: string_test.cpp 
 	${MKDIR} -p ${OBJECTDIR}

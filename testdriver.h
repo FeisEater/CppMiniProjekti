@@ -12,6 +12,7 @@
 #include <exception>
 #include <iostream>
 #include <vector>
+#include "nvwa/debug_new.h"
 
 #define test(testname, td) void testname() { td.setTestName(#testname);
 
@@ -59,6 +60,7 @@ class testdriver
             if (realValue != expectedValue)
                 throw equalityFail<Type>(expectedValue, realValue);
         }
+
     private:
         std::string curTestName;
         int testsPassed;
