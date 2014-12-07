@@ -90,8 +90,8 @@ test(sumOfStrings, td)
 }
 
 test(iterators, td)
-    GString string = "iterate this string please";
-    Character correctChars[26] = {'i', 't', 'e', 'r', 'a', 't', 'e', ' ', 't', 'h', 'i', 's', ' ',
+    const GString string = "iterate this string please";
+    const Character correctChars[26] = {'i', 't', 'e', 'r', 'a', 't', 'e', ' ', 't', 'h', 'i', 's', ' ',
         's', 't', 'r', 'i', 'n', 'g', ' ', 'p', 'l', 'e', 'a', 's', 'e'};
     int i = 0;
     for (Character c : string)
@@ -100,6 +100,14 @@ test(iterators, td)
         ++i;
     }
     td.check<int>(i, string.getSize());
+}
+
+test(swapping, td)
+    GString first = "first";
+    GString second = "second";
+    swap(first, second);
+    td.check<GString>(second, "first");
+    td.check<GString>(first, "second");
 }
 
 void runTests()
@@ -116,6 +124,7 @@ void runTests()
         assigningGStringCopiesIt,
         cantAccessAnyCharacterOnEmptyString,
         sumOfStrings,
-        iterators
+        iterators,
+        swapping
     });
 }

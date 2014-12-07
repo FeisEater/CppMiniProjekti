@@ -27,9 +27,9 @@ class equalityFail: public testfail
 {
 public:
     equalityFail(Type expected, Type real) : expectedValue(expected), realValue(real) {}
-    virtual void printFailReason() const
+    void printFailReason() const
     {
-        std::cout << "expected " << expectedValue << " but was " << realValue;
+        std::cout << "expected '" << expectedValue << "' but was '" << realValue << "'";
     }
     const Type expectedValue;
     const Type realValue;
@@ -39,9 +39,9 @@ class exceptionDidntHappen: public testfail
 {
 public:
     exceptionDidntHappen(std::string code, std::string exc) : executedCode(code), expectedException(exc) {}
-    virtual void printFailReason() const
+    void printFailReason() const
     {
-        std::cout << "expected " << executedCode << " to trigger exception " << expectedException;
+        std::cout << "expected '" << executedCode << "' to trigger exception '" << expectedException << "'";
     }
     std::string expectedException;
     std::string executedCode;

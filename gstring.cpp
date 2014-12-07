@@ -79,8 +79,41 @@ GString operator+=(GString& s1, const GString& s2)
     return s1;
 }
 
-/*std::istream& operator>>(std::ostream& is, const GString& obj)
+std::ostream& operator<<(std::ostream& os, const GString& obj)
 {
-    for ()
+    for (Character c : obj)
+        os << c;
+    return os;
+}
+
+bool isWhiteSpace(Character c)
+{
+    const Character whitespaces[6] = {' ', '\f', '\n', '\r', '\t', '\v'};
+    for (Character w : whitespaces)
+        if (c == w) return true;
+    return false;
+}
+
+std::istream& operator>>(std::istream& is, GString& obj)
+{
+    obj = "";
+    Character c;
+    is.get(c);
+    while(c && !isWhiteSpace(c))
+    {
+        obj += &c;
+        is.get(c);
+    }
     return is;
-}*/
+}
+
+void swap (GString& s1, GString& s2)
+{
+    Character* chars = s1.chars;
+    s1.chars = s2.chars;
+    s2.chars = chars;
+    
+    int size = s1.size;
+    s1.size = s2.size;
+    s2.size = size;
+}

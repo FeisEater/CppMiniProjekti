@@ -25,11 +25,11 @@ class GString
         GString& operator=(GString const& string);
         friend GString operator+(const GString& s1, const GString& s2);
         friend GString operator+=(GString& s1, const GString& s2);
-        //friend std::istream& operator>>(std::ostream& is, const GString& obj);
-        friend std::ostream& operator<<(std::ostream& os, const GString& obj)
-            {return os << obj.chars;}
-        const Character* begin() {return chars;}
-        const Character* end() {return chars + size;}
+        friend std::istream& operator>>(std::istream& is, GString& obj);
+        friend std::ostream& operator<<(std::ostream& os, const GString& obj);
+        const Character* begin() const {return chars;}
+        const Character* end() const {return chars + size;}
+        friend void swap (GString& s1, GString& s2);
     private:
         int size;
         Character* chars;
