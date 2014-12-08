@@ -10,18 +10,37 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <exception>
+
+class assertion_fail: public std::exception
+{
+    public:
+        assertion_fail() : info("Assertion fail") {}
+        assertion_fail(const char* string) : info(string) {}
+        const char* what() const noexcept {return info;}
+    private:
+        const char* info;
+};
+
+#ifdef NDEBUG
+    #define assert(b, msg)
+#else
+    #define assert(b, msg) \
+        if (!(b)) throw assertion_fail(msg);
+#endif
 
 typedef char Character;
+typedef unsigned int StringSize;
 
 class GString
 {
     public:
-        GString() : size(0), chars(nullptr) {}
+        GString() : size(0), chars(nullptr) {check();}
         GString(GString const& string);
         GString(const char* s);
         ~GString() {delete[] chars;}
-        int getSize() const   {return size;}
-        Character &operator[](int i) const;
+        StringSize getSize() const   {return size;}
+        Character &operator[](StringSize i) const;
         GString& operator=(GString const& string);
         friend GString operator+(const GString& s1, const GString& s2);
         friend GString operator+=(GString& s1, const GString& s2);
@@ -30,8 +49,9 @@ class GString
         const Character* begin() const {return chars;}
         const Character* end() const {return chars + size;}
         friend void swap (GString& s1, GString& s2);
+        void check();
     private:
-        int size;
+        StringSize size;
         Character* chars;
 };
 

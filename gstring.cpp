@@ -3,7 +3,7 @@
 GString::GString(GString const& string) : size(string.size)
 {
     chars = new Character[string.size];
-    for (int i = 0; i < string.size; i++)
+    for (StringSize i = 0; i < string.size; i++)
         chars[i] = string.chars[i];
 }
 
@@ -19,14 +19,14 @@ GString::GString(const char* s)
     }
     //then insert the characters
     chars = new Character[size];
-    for (int i = 0; i < size; i++)
+    for (StringSize i = 0; i < size; i++)
     {
         chars[i] = *s;
         ++s;
     }
 }
 
-Character &GString::operator[](int i) const
+Character &GString::operator[](StringSize i) const
 {
     if (i < 0 || i >= size)
         throw std::out_of_range("requested GString character index out of range");
@@ -38,7 +38,7 @@ GString& GString::operator=(GString const& string)
     delete[] chars;
     size = string.size;
     chars = new Character[string.size];
-    for (int i = 0; i < string.size; i++)
+    for (StringSize i = 0; i < string.size; i++)
         chars[i] = string.chars[i];
 }
 
@@ -46,7 +46,7 @@ bool operator==(GString const& a, GString const& b)
 {
     if (a.getSize() != b.getSize())
         return false;
-    for (int i = 0; i < a.getSize(); ++i)
+    for (StringSize i = 0; i < a.getSize(); ++i)
     {
         if (a[i] != b[i])
             return false;
@@ -59,9 +59,9 @@ GString operator+(const GString& s1, const GString& s2)
     GString result;
     result.size = s1.size + s2.size;
     result.chars = new Character[result.size];
-    for (int i = 0; i < s1.size; i++)
+    for (StringSize i = 0; i < s1.size; i++)
         result[i] = s1[i];
-    for (int i = 0; i < s2.size; i++)
+    for (StringSize i = 0; i < s2.size; i++)
         result[i + s1.size] = s2[i];
     return result;
 }
@@ -72,9 +72,9 @@ GString operator+=(GString& s1, const GString& s2)
     s1.size += s2.size;
     delete[] s1.chars;
     s1.chars = new Character[s1.size];
-    for (int i = 0; i < olds1.size; i++)
+    for (StringSize i = 0; i < olds1.size; i++)
         s1[i] = olds1[i];
-    for (int i = 0; i < s2.size; i++)
+    for (StringSize i = 0; i < s2.size; i++)
         s1[i + olds1.size] = s2[i];    
     return s1;
 }
@@ -113,7 +113,14 @@ void swap (GString& s1, GString& s2)
     s1.chars = s2.chars;
     s2.chars = chars;
     
-    int size = s1.size;
+    StringSize size = s1.size;
     s1.size = s2.size;
     s2.size = size;
+}
+
+void GString::check()
+{
+    assert(size >= 0, "String size must be non-negative")
+    if (chars == nullptr)
+        assert(size == 0, "If chars pointer is null, size must be 0")
 }

@@ -1,5 +1,7 @@
 #include "testdriver.h"
 #include "gstring.h"
+#include <sstream>
+#include <string>
 
 testdriver td;
 
@@ -110,6 +112,19 @@ test(swapping, td)
     td.check<GString>(first, "second");
 }
 
+test(streamIO, td)
+    std::stringstream ss;
+    const GString string = "output this";
+    const GString string2 = " and this";
+    ss << string << string2;
+    td.check<std::string>(ss.str(), "output this and this");
+    ss.str("takeThisString alsoThisString but ignore this string");
+    GString s1, s2;
+    ss >> s1 >> s2;
+    td.check<GString>(s1, "takeThisString");
+    td.check<GString>(s2, "alsoThisString");
+}
+
 void runTests()
 {
     td.runTests({
@@ -125,6 +140,7 @@ void runTests()
         cantAccessAnyCharacterOnEmptyString,
         sumOfStrings,
         iterators,
-        swapping
+        swapping,
+        streamIO
     });
 }
