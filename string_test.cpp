@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "testdriver.h"
 #include "gstring.h"
 #include <sstream>
@@ -125,6 +126,36 @@ test(streamIO, td)
     td.check<GString>(s2, "alsoThisString");
 }
 
+test(lessThan, td)
+    const GString first = "first";
+    const GString second = "second";
+    td.check<bool>(first < second, true);
+    td.check<bool>(second < first, false);
+    const GString aaaaa = "aaaaa";
+    const GString aaaab = "aaaab";
+    td.check<bool>(aaaaa < aaaab, true);
+    td.check<bool>(aaaab < aaaaa, false);
+    const GString string = "string";
+    const GString str = "str";
+    td.check<bool>(str < string, true);
+    td.check<bool>(string < str, false);
+    const GString string2 = "string";
+    td.check<bool>(string < string2, false);
+    td.check<bool>(string2 < string, false);
+}
+
+test(stlSort, td)
+    std::vector<GString> v = {"apple", "orange", "pear", "sandwich", "zoidberg", "orangutang", "chocolate"};
+    std::vector<GString> ordered = {"apple", "chocolate", "orange", "orangutang", "pear", "sandwich", "zoidberg"};
+    for (int i = 0; i < 1000; i++)
+    {
+        std::random_shuffle(v.begin(), v.end());
+        std::sort(v.begin(), v.end());
+        for (int i = 0; i < v.size(); i++)
+            td.check<GString>(v[i], ordered[i]);
+    }
+}
+
 void runTests()
 {
     td.runTests({
@@ -141,6 +172,8 @@ void runTests()
         sumOfStrings,
         iterators,
         swapping,
-        streamIO
+        streamIO,
+        lessThan,
+        stlSort
     });
 }

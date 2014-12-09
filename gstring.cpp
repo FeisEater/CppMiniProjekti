@@ -5,6 +5,7 @@ GString::GString(GString const& string) : size(string.size)
     chars = new Character[string.size];
     for (StringSize i = 0; i < string.size; i++)
         chars[i] = string.chars[i];
+    check();
 }
 
 GString::GString(const char* s)
@@ -24,6 +25,7 @@ GString::GString(const char* s)
         chars[i] = *s;
         ++s;
     }
+    check();
 }
 
 Character &GString::operator[](StringSize i) const
@@ -40,6 +42,8 @@ GString& GString::operator=(GString const& string)
     chars = new Character[string.size];
     for (StringSize i = 0; i < string.size; i++)
         chars[i] = string.chars[i];
+    check();
+    return *this;
 }
 
 bool operator==(GString const& a, GString const& b)
@@ -63,10 +67,11 @@ GString operator+(const GString& s1, const GString& s2)
         result[i] = s1[i];
     for (StringSize i = 0; i < s2.size; i++)
         result[i + s1.size] = s2[i];
+    result.check();
     return result;
 }
 
-GString operator+=(GString& s1, const GString& s2)
+GString& operator+=(GString& s1, const GString& s2)
 {
     GString olds1 = s1;
     s1.size += s2.size;
@@ -75,7 +80,8 @@ GString operator+=(GString& s1, const GString& s2)
     for (StringSize i = 0; i < olds1.size; i++)
         s1[i] = olds1[i];
     for (StringSize i = 0; i < s2.size; i++)
-        s1[i + olds1.size] = s2[i];    
+        s1[i + olds1.size] = s2[i];
+    s1.check();
     return s1;
 }
 
@@ -104,6 +110,7 @@ std::istream& operator>>(std::istream& is, GString& obj)
         obj += &c;
         is.get(c);
     }
+    obj.check();
     return is;
 }
 
@@ -116,11 +123,35 @@ void swap (GString& s1, GString& s2)
     StringSize size = s1.size;
     s1.size = s2.size;
     s2.size = size;
+    
+    s1.check();
+    s2.check();
+}
+
+bool operator<(GString const& a, GString const& b)
+{
+    int minSize = (a.getSize() < b.getSize()) ? a.getSize() : b.getSize();
+    for (StringSize i = 0; i < minSize; i++)
+    {
+        if (a[i] < b[i])    return true;
+        if (b[i] < a[i])    return false;
+    }
+    return a.getSize() < b.getSize();
 }
 
 void GString::check()
 {
-    assert(size >= 0, "String size must be non-negative")
-    if (chars == nullptr)
-        assert(size == 0, "If chars pointer is null, size must be 0")
+    try
+    {
+        assert(size >= 0, "String size must be non-negative")
+        if (chars == nullptr)
+            assert(size == 0, "If chars pointer is null, size must be 0")
+        if (size == 0)
+            assert(chars == nullptr, "If string size is zero, character array pointer must be null")
+    }
+    catch(...)
+    {
+        delete[] chars;
+        throw;
+    }
 }

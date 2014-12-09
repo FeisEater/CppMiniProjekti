@@ -6,11 +6,13 @@
  */
 
 #include "string_test.h"
+#include "gstring.h"
 /*
  * 
  */
 
 int main(int argc, char** argv) {
+    GString string = "";
     runTests();
     return 0;
 }

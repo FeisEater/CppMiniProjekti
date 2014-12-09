@@ -23,7 +23,7 @@ class assertion_fail: public std::exception
 };
 
 #ifdef NDEBUG
-    #define assert(b, msg)
+    #define assert(b, msg) ;
 #else
     #define assert(b, msg) \
         if (!(b)) throw assertion_fail(msg);
@@ -43,7 +43,7 @@ class GString
         Character &operator[](StringSize i) const;
         GString& operator=(GString const& string);
         friend GString operator+(const GString& s1, const GString& s2);
-        friend GString operator+=(GString& s1, const GString& s2);
+        friend GString& operator+=(GString& s1, const GString& s2);
         friend std::istream& operator>>(std::istream& is, GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj);
         const Character* begin() const {return chars;}
@@ -57,6 +57,10 @@ class GString
 
 bool operator==(GString const& a, GString const& b);
 inline bool operator!=(GString const& a, GString const& b)  {return !(a == b);}
+bool operator<(GString const& a, GString const& b);
+inline bool operator>(GString const& a, GString const& b)  {return b < a;};
+inline bool operator<=(GString const& a, GString const& b) {return a == b || a < b;}
+inline bool operator>=(GString const& a, GString const& b) {return b <= a;};
 
 #endif	/* GSTRING_H */
 
