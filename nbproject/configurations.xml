@@ -4,6 +4,24 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="nvwa" displayName="nvwa" projectFiles="true">
+        <itemPath>nvwa/_nvwa.h</itemPath>
+        <itemPath>nvwa/bool_array.h</itemPath>
+        <itemPath>nvwa/c++11.h</itemPath>
+        <itemPath>nvwa/class_level_lock.h</itemPath>
+        <itemPath>nvwa/cont_ptr_utils.h</itemPath>
+        <itemPath>nvwa/debug_new.h</itemPath>
+        <itemPath>nvwa/fast_mutex.h</itemPath>
+        <itemPath>nvwa/fc_queue.h</itemPath>
+        <itemPath>nvwa/fixed_mem_pool.h</itemPath>
+        <itemPath>nvwa/mem_pool_base.h</itemPath>
+        <itemPath>nvwa/object_level_lock.h</itemPath>
+        <itemPath>nvwa/pctimer.h</itemPath>
+        <itemPath>nvwa/set_assign.h</itemPath>
+        <itemPath>nvwa/static_assert.h</itemPath>
+        <itemPath>nvwa/static_mem_pool.h</itemPath>
+        <itemPath>nvwa/type_traits.h</itemPath>
+      </logicalFolder>
       <itemPath>gstring.h</itemPath>
       <itemPath>string_test.h</itemPath>
       <itemPath>testdriver.h</itemPath>
@@ -15,6 +33,12 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="nvwa" displayName="nvwa" projectFiles="true">
+        <itemPath>nvwa/bool_array.cpp</itemPath>
+        <itemPath>nvwa/debug_new.cpp</itemPath>
+        <itemPath>nvwa/mem_pool_base.cpp</itemPath>
+        <itemPath>nvwa/static_mem_pool.cpp</itemPath>
+      </logicalFolder>
       <itemPath>gstring.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>string_test.cpp</itemPath>
@@ -32,6 +56,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>nvwa</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -44,6 +71,7 @@
         <ccTool>
           <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
+          <commandLine>-U__STRICT_ANSI__</commandLine>
         </ccTool>
       </compileType>
       <item path="gstring.cpp" ex="false" tool="1" flavor2="0">
@@ -51,6 +79,46 @@
       <item path="gstring.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/_nvwa.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/bool_array.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/bool_array.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/c++11.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/class_level_lock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/cont_ptr_utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/debug_new.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/debug_new.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/fast_mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/fc_queue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/fixed_mem_pool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/mem_pool_base.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/mem_pool_base.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/object_level_lock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/pctimer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/set_assign.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/static_assert.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/static_mem_pool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/static_mem_pool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/type_traits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="string_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -86,6 +154,46 @@
       <item path="gstring.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/_nvwa.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/bool_array.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/bool_array.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/c++11.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/class_level_lock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/cont_ptr_utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/debug_new.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/debug_new.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/fast_mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/fc_queue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/fixed_mem_pool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/mem_pool_base.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/mem_pool_base.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/object_level_lock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/pctimer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/set_assign.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/static_assert.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/static_mem_pool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nvwa/static_mem_pool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="nvwa/type_traits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="string_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
