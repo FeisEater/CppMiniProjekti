@@ -1,8 +1,14 @@
 #include "gstring.h"
 
+StringSize max(StringSize a, StringSize b)
+{
+    return (a > b) ? a : b;
+}
+
 GString::GString(GString const& string) : size(string.size)
 {
-    chars = new Character[string.size];
+    space = max(size * 2, minSize);
+    chars = new Character[space];
     for (StringSize i = 0; i < string.size; i++)
         chars[i] = string.chars[i];
     check();
@@ -19,7 +25,8 @@ GString::GString(const char* s)
         ++size;
     }
     //then insert the characters
-    chars = new Character[size];
+    space = max(size * 2, minSize);
+    chars = new Character[space];
     for (StringSize i = 0; i < size; i++)
     {
         chars[i] = *s;
@@ -37,11 +44,11 @@ Character &GString::operator[](StringSize i) const
 
 GString& GString::operator=(GString const& string)
 {
-    delete[] chars;
+    fitMoreCharacters(string.size - size);
     size = string.size;
-    chars = new Character[string.size];
+    shrinkCharContainer();
     for (StringSize i = 0; i < string.size; i++)
-        chars[i] = string.chars[i];
+        chars[i] = string[i];
     check();
     return *this;
 }
@@ -60,29 +67,39 @@ bool operator==(GString const& a, GString const& b)
 
 GString operator+(const GString& s1, const GString& s2)
 {
-    GString result;
-    result.size = s1.size + s2.size;
-    result.chars = new Character[result.size];
-    for (StringSize i = 0; i < s1.size; i++)
-        result[i] = s1[i];
-    for (StringSize i = 0; i < s2.size; i++)
-        result[i + s1.size] = s2[i];
+    GString result = s1;
+    result += s2;
     result.check();
     return result;
 }
 
-GString& operator+=(GString& s1, const GString& s2)
+GString& GString::operator+=(const GString& s2)
 {
-    GString olds1 = s1;
-    s1.size += s2.size;
-    delete[] s1.chars;
-    s1.chars = new Character[s1.size];
-    for (StringSize i = 0; i < olds1.size; i++)
-        s1[i] = olds1[i];
-    for (StringSize i = 0; i < s2.size; i++)
-        s1[i + olds1.size] = s2[i];
-    s1.check();
-    return s1;
+    fitMoreCharacters(s2.size);
+    for (int i = 0; i < s2.size; ++i)
+        chars[i + size] = s2[i];
+    size += s2.size;
+    check();
+    return *this;
+}
+
+void GString::push_back(const Character c)
+{
+    fitMoreCharacters(1);
+    chars[size] = c;
+    ++size;
+    check();
+}
+
+const Character GString::pop_back()
+{
+    if (size == 0)
+        return 0;
+    Character c = chars[size - 1];
+    --size;
+    shrinkCharContainer();
+    check();
+    return c;
 }
 
 std::ostream& operator<<(std::ostream& os, const GString& obj)
@@ -107,7 +124,7 @@ std::istream& operator>>(std::istream& is, GString& obj)
     is.get(c);
     while(c && !isWhiteSpace(c))
     {
-        obj += &c;
+        obj.push_back(c);
         is.get(c);
     }
     obj.check();
@@ -139,15 +156,41 @@ bool operator<(GString const& a, GString const& b)
     return a.getSize() < b.getSize();
 }
 
+void GString::fitMoreCharacters(StringSize additionalChars)
+{
+    if (size + additionalChars >= space)
+        replaceCharContainer(2 * (size + additionalChars));
+}
+
+void GString::shrinkCharContainer()
+{
+    if (size == 0)
+    {
+        if (space > minSize)
+            replaceCharContainer(minSize);
+    }
+    else if (space > size * minSize)
+        replaceCharContainer(2 * size);
+}
+
+void GString::replaceCharContainer(StringSize newSize)
+{
+    Character* oldchars = chars;
+    space = newSize;
+    chars = new Character[space];
+    for (int i = 0; i < size; ++i)
+        chars[i] = oldchars[i];
+    delete[] oldchars;
+}
+
 void GString::check()
 {
     try
     {
         assert(size >= 0, "String size must be non-negative")
-        if (chars == nullptr)
-            assert(size == 0, "If chars pointer is null, size must be 0")
-        if (size == 0)
-            assert(chars == nullptr, "If string size is zero, character array pointer must be null")
+        assert(space >= minSize, "Allocated char array length was too small")
+        assert(size <= space, "String size is beyond character array size")
+        assert(chars != nullptr, "Char array pointer can't be null")
     }
     catch(...)
     {

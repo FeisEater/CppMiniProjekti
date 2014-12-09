@@ -156,6 +156,40 @@ test(stlSort, td)
     }
 }
 
+GString f(GString s)   {return s + " <- a GString right there.";}
+
+//Mainly tests compiler, not GString class functionality itself
+test(stringFunctionAlsoTakesLiteral, td)
+    td.check<GString>(f("creature"), "creature <- a GString right there.");
+}
+
+test(pushBack, td)
+    GString paul = "paul";
+    paul.push_back('a');
+    td.check<GString>(paul, "paula");
+    paul.push_back(' ');
+    paul.push_back('d');
+    paul.push_back('e');
+    paul.push_back('e');
+    paul.push_back('n');
+    td.check<GString>(paul, "paula deen");
+}
+
+test(popBack, td)
+    GString paula = "paula";
+    const Character a = paula.pop_back();
+    td.check<GString>(paula, "paul");
+    td.check<Character>(a, 'a');
+    paula.pop_back();
+    Character b = 'x';
+    td.check<GString>(paula, "pau");
+    for (int i = 0; i < 10; i++)
+        paula.pop_back();
+    b = paula.pop_back();
+    td.check<GString>(paula, "");
+    td.check<Character>(b, 0);
+}
+
 void runTests()
 {
     td.runTests({
@@ -174,6 +208,9 @@ void runTests()
         swapping,
         streamIO,
         lessThan,
-        stlSort
+        stlSort,
+        stringFunctionAlsoTakesLiteral,
+        pushBack,
+        popBack
     });
 }

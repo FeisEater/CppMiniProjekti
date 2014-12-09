@@ -6,13 +6,15 @@
  */
 
 #include "string_test.h"
+//remove these later
 #include "gstring.h"
+#include <iostream>
+#include <vector>
 /*
  * 
  */
 
 int main(int argc, char** argv) {
-    GString string = "";
     runTests();
     return 0;
 }

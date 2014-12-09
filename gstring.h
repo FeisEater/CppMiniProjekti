@@ -32,10 +32,12 @@ class assertion_fail: public std::exception
 typedef char Character;
 typedef unsigned int StringSize;
 
+const StringSize minSize = 11;
+
 class GString
 {
     public:
-        GString() : size(0), chars(nullptr) {check();}
+        GString() : size(0), space(minSize), chars(new Character[minSize]) {check();}
         GString(GString const& string);
         GString(const char* s);
         ~GString() {delete[] chars;}
@@ -43,7 +45,9 @@ class GString
         Character &operator[](StringSize i) const;
         GString& operator=(GString const& string);
         friend GString operator+(const GString& s1, const GString& s2);
-        friend GString& operator+=(GString& s1, const GString& s2);
+        GString& operator+=(const GString& s2);
+        void push_back(const Character c);
+        const Character pop_back();
         friend std::istream& operator>>(std::istream& is, GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj);
         const Character* begin() const {return chars;}
@@ -51,7 +55,11 @@ class GString
         friend void swap (GString& s1, GString& s2);
         void check();
     private:
+        void fitMoreCharacters(StringSize additionalChars);
+        void shrinkCharContainer();
+        void replaceCharContainer(StringSize newSize);
         StringSize size;
+        StringSize space;
         Character* chars;
 };
 
