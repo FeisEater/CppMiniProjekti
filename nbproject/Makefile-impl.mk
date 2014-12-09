@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=CppProject
+PROJECTNAME=CppMiniProjekti
 
 # Active Configuration
 DEFAULTCONF=Debug
