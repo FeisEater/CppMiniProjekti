@@ -1,4 +1,6 @@
 #include "gstring.h"
+//delete this
+#include <iostream>
 
 StringSize max(StringSize a, StringSize b)
 {
@@ -11,6 +13,12 @@ GString::GString(GString const& string) : size(string.size)
     chars = new Character[space];
     for (StringSize i = 0; i < string.size; i++)
         chars[i] = string.chars[i];
+    check();
+}
+
+GString::GString(GString&& string) : size(string.size), space(string.space), chars(string.chars)
+{
+    string.chars = nullptr;
     check();
 }
 
@@ -53,6 +61,17 @@ GString& GString::operator=(GString const& string)
     return *this;
 }
 
+GString& GString::operator=(GString&& string)
+{
+    delete[] chars;
+    size = string.size;
+    space = string.space;
+    chars = string.chars;
+    string.chars = nullptr;
+    check();
+    return *this;
+}
+
 bool operator==(GString const& a, GString const& b)
 {
     if (a.getSize() != b.getSize())
@@ -67,9 +86,8 @@ bool operator==(GString const& a, GString const& b)
 
 GString operator+(const GString& s1, const GString& s2)
 {
-    GString result = s1;
+    GString result = GString(s1);
     result += s2;
-    result.check();
     return result;
 }
 
