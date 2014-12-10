@@ -190,6 +190,21 @@ test(popBack, td)
     td.check<Character>(b, 0);
 }
 
+test(insertStuff, td)
+    GString string = "thesaurus";
+    string.insert(3, ' ');
+    td.check<GString>(string, "the saurus");
+    string.insert(4, "dino");
+    td.check<GString>(string, "the dinosaurus");
+    string.insert(0, "-> ");
+    string.insert(string.getSize(), " <-");
+    td.check<GString>(string, "-> the dinosaurus <-");
+    expectException(string.insert(-1, "fail"), std::out_of_range, td)
+    expectException(string.insert(string.getSize() + 1, "fail"), std::out_of_range, td)
+    endExpectException
+    endExpectException
+}
+
 void runTests()
 {
     td.runTests({
