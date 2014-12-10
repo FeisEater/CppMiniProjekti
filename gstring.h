@@ -39,11 +39,13 @@ class GString
     public:
         GString() : size(0), space(minSize), chars(new Character[minSize]) {check();}
         GString(GString const& string);
+        GString(GString&& string);
         GString(const char* s);
         ~GString() {delete[] chars;}
         StringSize getSize() const   {return size;}
         Character &operator[](StringSize i) const;
         GString& operator=(GString const& string);
+        GString& operator=(GString&& string);
         friend GString operator+(const GString& s1, const GString& s2);
         GString& operator+=(const GString& s2);
         void push_back(const Character c);
