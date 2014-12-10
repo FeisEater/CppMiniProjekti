@@ -189,7 +189,7 @@ test(popBack, td)
     td.check<GString>(paula, "");
     td.check<Character>(b, 0);
 }
-/*
+
 test(insertStuff, td)
     GString string = "thesaurus";
     string.insert(3, ' ');
@@ -199,12 +199,37 @@ test(insertStuff, td)
     string.insert(0, "-> ");
     string.insert(string.getSize(), " <-");
     td.check<GString>(string, "-> the dinosaurus <-");
+    string.insert(0, '!');
+    string.insert(string.getSize(), '!');
+    td.check<GString>(string, "!-> the dinosaurus <-!");
     expectException(string.insert(-1, "fail"), std::out_of_range, td)
     expectException(string.insert(string.getSize() + 1, "fail"), std::out_of_range, td)
+    expectException(string.insert(-1, 'x'), std::out_of_range, td)
+    expectException(string.insert(string.getSize() + 1, 'x'), std::out_of_range, td)
+    endExpectException
+    endExpectException
     endExpectException
     endExpectException
 }
-*/
+
+test(eraseStuff, td)
+    GString string = "!Carefully erase _this string_ right here!";
+    string.erase(17, 30);
+    td.check<GString>(string, "!Carefully erase right here!");
+    string.erase(0, 0);
+    string.erase(string.getSize() - 1, string.getSize() - 1);
+    td.check<GString>(string, "Carefully erase right here");
+    expectException(string.erase(5, 3), std::domain_error, td)
+    //if StringSize is unsigned, domain_error is thrown instead of out_of_range. just check if any exception is thrown
+    expectException(string.erase(-1, 5), std::exception, td)
+    expectException(string.erase(25, 28), std::out_of_range, td)
+        string.erase(0, string.getSize() - 1);
+        td.check<GString>(string, "");
+    endExpectException
+    endExpectException
+    endExpectException
+}
+
 void runTests()
 {
     td.runTests({
@@ -226,6 +251,8 @@ void runTests()
         stlSort,
         stringFunctionAlsoTakesLiteral,
         pushBack,
-        popBack
+        popBack,
+        insertStuff,
+        eraseStuff
     });
 }

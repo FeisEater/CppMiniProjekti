@@ -50,6 +50,9 @@ class GString
         GString& operator+=(const GString& s2);
         void push_back(const Character c);
         const Character pop_back();
+        void insert(StringSize pos, const GString& string);
+        void insert(StringSize pos, const Character c);
+        void erase(StringSize start, StringSize end);
         friend std::istream& operator>>(std::istream& is, GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj);
         const Character* begin() const {return chars;}

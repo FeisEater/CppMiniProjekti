@@ -120,6 +120,50 @@ const Character GString::pop_back()
     return c;
 }
 
+void GString::insert(StringSize pos, const GString& string)
+{
+    if (pos < 0 || pos > size)
+        throw std::out_of_range("Can't insert out of range");
+    fitMoreCharacters(string.size);
+    size += string.size;
+    for (StringSize i = size - 1; i >= pos; --i)
+    {
+        chars[i + string.size] = chars[i];
+        if (i == 0) break;
+    }
+    for (StringSize i = 0; i < string.size; ++i)
+        chars[i + pos] = string[i];
+    check();
+}
+
+void GString::insert(StringSize pos, const Character c)
+{
+    if (pos < 0 || pos > size)
+        throw std::out_of_range("Can't insert out of range");
+    fitMoreCharacters(1);
+    ++size;
+    for (int i = size - 1; i >= pos; --i)
+    {
+        chars[i + 1] = chars[i];
+        if (i == 0) break;
+    }
+    chars[pos] = c;
+    check();
+}
+
+void GString::erase(StringSize start, StringSize end)
+{
+    if (start < 0 || end >= size)
+        throw std::out_of_range("Parameters out of range");
+    if (start > end)
+        throw std::domain_error("For 'erase' first argument must be less than second argument");
+    for (int i = end + 1; i < size; ++i)
+        chars[i - end - 1 + start] = chars[i];
+    size -= end - start + 1;
+    shrinkCharContainer();
+    check();
+}
+
 std::ostream& operator<<(std::ostream& os, const GString& obj)
 {
     for (Character c : obj)
