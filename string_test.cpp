@@ -189,7 +189,7 @@ test(popBack, td)
     td.check<GString>(paula, "");
     td.check<Character>(b, 0);
 }
-
+/*
 test(insertStuff, td)
     GString string = "thesaurus";
     string.insert(3, ' ');
@@ -204,7 +204,7 @@ test(insertStuff, td)
     endExpectException
     endExpectException
 }
-
+*/
 void runTests()
 {
     td.runTests({
