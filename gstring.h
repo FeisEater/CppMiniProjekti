@@ -66,6 +66,23 @@ class GString
         StringSize size;
         StringSize space;
         Character* chars;
+        
+        class Iterator
+        {
+        public:
+            Iterator();
+            Iterator(StringSize i);
+            Character operator*();
+            Character operator->();
+            Iterator& operator++();
+            Iterator operator++(int);
+            friend bool operator==(Iterator const& a, Iterator const& b);
+            friend bool operator!=(Iterator const& a, Iterator const& b) {return !(a == b);}
+            
+        private:
+            StringSize index;
+        };
+
 };
 
 bool operator==(GString const& a, GString const& b);

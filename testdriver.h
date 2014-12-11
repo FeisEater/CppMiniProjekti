@@ -55,7 +55,7 @@ class testdriver
         std::string getTestName() {return curTestName;}
         void setTestName(std::string testName) {curTestName = testName;}
         template <typename Type>
-        void check(const Type realValue, const Type expectedValue)
+        void check(const Type& realValue, const Type& expectedValue)
         {
             if (realValue != expectedValue)
                 throw equalityFail<Type>(expectedValue, realValue);
@@ -64,6 +64,7 @@ class testdriver
     private:
         std::string curTestName;
         int testsPassed;
+        std::vector<void (*)()> failedTests;
 };
 
 #define expectException(code, exc, td) \
