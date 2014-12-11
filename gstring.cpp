@@ -260,3 +260,34 @@ void GString::check()
         throw;
     }
 }
+
+Character& GString::Iterator::operator*()
+{
+    checkIndex();
+    return string[index];
+}
+
+Character* GString::Iterator::operator->()
+{
+    checkIndex();
+    return string.chars + index;
+}
+
+GString::Iterator& GString::Iterator::operator++()
+{
+    ++index;
+    return *this;
+}
+
+GString::Iterator GString::Iterator::operator++(int)
+{
+    Iterator it(*this);
+    ++index;
+    return it;
+}
+
+void GString::Iterator::checkIndex()
+{
+    if (index < 0 || index >= string.size)
+        throw std::out_of_range("Iterator index out of bounds");
+}

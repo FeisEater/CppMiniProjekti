@@ -36,6 +36,30 @@ const StringSize minSize = 11;
 
 class GString
 {
+    private:
+        void fitMoreCharacters(StringSize additionalChars);
+        void shrinkCharContainer();
+        void replaceCharContainer(StringSize newSize);
+        StringSize size;
+        StringSize space;
+        Character* chars;
+        
+        class Iterator
+        {
+        private:
+            const GString& string;
+            StringSize index;
+            void checkIndex();
+        public:
+            Iterator(const GString& str, StringSize i) : string(str), index(i) {}
+            Iterator(Iterator const& it) : string(it.string), index(it.index) {}
+            Character& operator*();
+            Character* operator->();
+            Iterator& operator++();
+            Iterator operator++(int);
+            friend bool operator==(Iterator const& a, Iterator const& b) {return a.index == b.index;}
+            friend bool operator!=(Iterator const& a, Iterator const& b) {return !(a == b);}
+        };    
     public:
         GString() : size(0), space(minSize), chars(new Character[minSize]) {check();}
         GString(GString const& string);
@@ -55,33 +79,12 @@ class GString
         void erase(StringSize start, StringSize end);
         friend std::istream& operator>>(std::istream& is, GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj);
-        const Character* begin() const {return chars;}
-        const Character* end() const {return chars + size;}
+        Iterator begin() const {return Iterator(*this, 0);}
+        Iterator end() const {return Iterator(*this, size);}
+        Iterator begin() {return Iterator(*this, 0);}
+        Iterator end() {return Iterator(*this, size);}
         friend void swap (GString& s1, GString& s2);
         void check();
-    private:
-        void fitMoreCharacters(StringSize additionalChars);
-        void shrinkCharContainer();
-        void replaceCharContainer(StringSize newSize);
-        StringSize size;
-        StringSize space;
-        Character* chars;
-        
-        class Iterator
-        {
-        public:
-            Iterator();
-            Iterator(StringSize i);
-            Character operator*();
-            Character operator->();
-            Iterator& operator++();
-            Iterator operator++(int);
-            friend bool operator==(Iterator const& a, Iterator const& b);
-            friend bool operator!=(Iterator const& a, Iterator const& b) {return !(a == b);}
-            
-        private:
-            StringSize index;
-        };
 
 };
 

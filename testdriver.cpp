@@ -2,7 +2,13 @@
 
 using namespace std;
 
-void testdriver::runTests(int testCounter, vector<void (*)()> tests)
+#define failTestAndPrint(info) \
+        ++testsFailed; \
+        cout << info; \
+        failLog << info; \
+        runTests(testCounter + 1, tests);
+
+void testdriver::runTests(int testCounter, testContainer tests)
 {
     try
     {
@@ -10,36 +16,30 @@ void testdriver::runTests(int testCounter, vector<void (*)()> tests)
         {
             tests[testCounter]();
             cout << curTestName << " passed" << endl;
-            ++testsPassed;
         }
         cout << endl;
-        if (testsPassed == tests.size())
+        if (testsFailed == 0)
             cout << "Congrats, man! All tests passed.";
         else
-            cout << (tests.size() - testsPassed) << " tests faileds!!!";
+            cout << testsFailed << " tests faileds!!! Fix the following:" << endl << endl << failLog.str();
         cout << endl;
     }
     catch(testfail const& e)
     {
-        cout << curTestName << " failed: ";
-        e.printFailReason();
-        cout << endl;
-        runTests(testCounter + 1, tests);
+        failTestAndPrint(curTestName << " failed: " << e.failReason() << endl)
     }
     catch(exception const& e)
     {
-        cout << curTestName << " failed, code threw following exception: " << e.what() << endl;
-        runTests(testCounter + 1, tests);
+        failTestAndPrint(curTestName << " failed, code threw following exception: " << e.what() << endl)
     }
     catch( ... )
     {
-        cout << curTestName << " failed, code threw unknown exception" << endl;
-        runTests(testCounter + 1, tests);
+        failTestAndPrint(curTestName << " failed, code threw unknown exception" << endl)
     }
 }
 
-void testdriver::runTests(vector<void (*)()> tests)
+void testdriver::runTests(testContainer tests)
 {
-    testsPassed = 0;
+    testsFailed = 0;
     runTests(0, tests);
 }

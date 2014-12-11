@@ -103,6 +103,11 @@ test(iterators, td)
         ++i;
     }
     td.check<int>(i, string.getSize());
+    GString aaaa = "123456";
+    //Why doesn't setting a value work with for (Character c : aaaa)?
+    for (auto it = aaaa.begin(); it != aaaa.end(); ++it)
+        *it = 'a';
+    td.check<GString>(aaaa, "aaaaaa");
 }
 
 test(swapping, td)

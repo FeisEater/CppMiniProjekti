@@ -12,6 +12,7 @@
 #include <exception>
 #include <iostream>
 #include <vector>
+#include <sstream>
 #include "nvwa/debug_new.h"
 
 #define test(testname, td) void testname() { td.setTestName(#testname);
@@ -19,7 +20,7 @@
 class testfail: public std::exception
 {
     public:
-        virtual void printFailReason() const {}
+        virtual std::string failReason() const {return "this shouldn't be returned";}
 };
 
 template <typename Type>
@@ -27,9 +28,11 @@ class equalityFail: public testfail
 {
 public:
     equalityFail(Type expected, Type real) : expectedValue(expected), realValue(real) {}
-    void printFailReason() const
+    std::string failReason() const
     {
-        std::cout << "expected '" << expectedValue << "' but was '" << realValue << "'";
+        std::stringstream ss;
+        ss << "expected '" << expectedValue << "' but was '" << realValue << "'";
+        return ss.str();
     }
     const Type expectedValue;
     const Type realValue;
@@ -39,19 +42,23 @@ class exceptionDidntHappen: public testfail
 {
 public:
     exceptionDidntHappen(std::string code, std::string exc) : executedCode(code), expectedException(exc) {}
-    void printFailReason() const
+    std::string failReason() const
     {
-        std::cout << "expected '" << executedCode << "' to trigger exception '" << expectedException << "'";
+        std::stringstream ss;
+        ss << "expected '" << executedCode << "' to trigger exception '" << expectedException << "'";
+        return ss.str();
     }
     std::string expectedException;
     std::string executedCode;
 };
 
+typedef std::vector<void (*)()> testContainer;
+
 class testdriver
 {
     public:
-        void runTests(int testCounter, std::vector<void (*)()> tests);
-        void runTests(std::vector<void (*)()> tests);
+        void runTests(int testCounter, testContainer tests);
+        void runTests(testContainer tests);
         std::string getTestName() {return curTestName;}
         void setTestName(std::string testName) {curTestName = testName;}
         template <typename Type>
@@ -63,8 +70,8 @@ class testdriver
 
     private:
         std::string curTestName;
-        int testsPassed;
-        std::vector<void (*)()> failedTests;
+        int testsFailed;
+        std::stringstream failLog;
 };
 
 #define expectException(code, exc, td) \
