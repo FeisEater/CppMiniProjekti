@@ -66,8 +66,8 @@ typedef std::vector<void (*)()> testContainer;
 class testdriver
 {
     public:
-        void runTests(int testCounter, testContainer tests);
-        void runTests(testContainer tests);
+        void runTests(testContainer tc);
+        void continueFrom(int testCounter);
         
         std::string getTestName() {return curTestName;}
         void setTestName(std::string testName) {curTestName = testName;}
@@ -81,6 +81,7 @@ class testdriver
         }
 
     private:
+        testContainer tests;        //this holds test pointers
         std::string curTestName;    //name of the test currently runnning
         int testsFailed;    //amount of tests that failed
         std::stringstream failLog;  //Reprint results of failed tests at the end of the run
@@ -99,12 +100,7 @@ class testdriver
         throw exceptionDidntHappen(#code, #exc); \
     } \
     catch (exc const& e) \
-    {
-
-//remove this maybe?
-#define endExpectException \
-        return; \
-    }
+    {}
 
 #endif	/* TESTDRIVER_H */
 

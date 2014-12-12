@@ -19,9 +19,20 @@ void GString::setDefaultValues()
 }
 
 /*
+ * Helper function to restore values from backup
+ */
+void GString::restoreValues(const GString& backup)
+{
+    size = backup.size;
+    space = backup.space;
+    chars = backup.chars;
+}
+
+/*
  * Copy constructor
  * Precondition: GString to be copied from passes its invariant
  * Postcondition: Constructed GString passes its invariant
+ * Strong exception guarantee
  */
 GString::GString(GString const& string)
 {
@@ -53,7 +64,8 @@ GString::GString(GString const& string)
  * Move constructor
  * Precondition: GString to be moved from passes its invariant
  * PostCondition: Constructed GString passes its invariant
- * Previously given GString will not pass its invariant after this operation
+ * Note: Previously given GString will not pass its invariant after this operation
+ * Strong exception guarantee
  */
 GString::GString(GString&& string)
 {
@@ -84,6 +96,7 @@ GString::GString(GString&& string)
  * Type conversion from c_string
  * No precondition, c_string assumed to be valid
  * PostCondition: Constructed GString passes its invariant
+ * Strong exception guarantee
  */
 GString::GString(const char* s)
 {
@@ -130,25 +143,36 @@ Character &GString::operator[](StringSize i) const
  * Copy assignment
  * Precondition: GString to be copied from passes its invariant
  * Postcondition: Constructed GString passes its invariant
+ * Strong exception guarantee
  */
 GString& GString::operator=(GString const& string)
 {
     string.check(); //On fail throw exception and go no further
+    
+    const GString backup(*this);
     
     fitMoreCharacters(string.size - size);
     size = string.size;
     shrinkCharContainer();
     for (StringSize i = 0; i < string.size; i++)
         chars[i] = string[i];
-    check();
+    
+    try {check();}
+    catch (...)
+    {
+        //On postcondition fail restore original values
+        restoreValues(backup);
+        throw;
+    }
     return *this;
 }
 
 /*
  * Move assignment
  * Precondition: GString to be moved from passes its invariant
- * Postcondition: Constructed GString passes its invariant
- * Previously given GString will not pass its invariant after this operation
+ * No postcondition. All data values are moved trivially, therefore we have confidence
+ *  that if precondition passed then newly constructed string will pass its invariant
+ * Note: Previously given GString will not pass its invariant after this operation
  */
 GString& GString::operator=(GString&& string)
 {
@@ -159,7 +183,6 @@ GString& GString::operator=(GString&& string)
     space = string.space;
     chars = string.chars;
     string.chars = nullptr;
-    check();
     return *this;
 }
 
@@ -195,7 +218,9 @@ GString operator+(const GString& s1, const GString& s2)
     
     GString result = GString(s1);
     result += s2;
-    result.check();
+    
+    result.check(); //if this fails, exception is thrown and no string is returned
+    
     return result;
 }
 
@@ -203,16 +228,26 @@ GString operator+(const GString& s1, const GString& s2)
  * Modifies this GString by concatinating s2 into it
  * Precondition: s2 passes its invariant
  * Postcindition: this GString passes its invariant
+ * Strong exception guarantee
  */
 GString& GString::operator+=(const GString& s2)
 {
     s2.check();
     
+    const GString backup(*this);
     fitMoreCharacters(s2.size);
     for (int i = 0; i < s2.size; ++i)
         chars[i + size] = s2[i];
     size += s2.size;
-    check();
+    
+    try {check();}
+    catch (...)
+    {
+        //On postcondition fail restore original values
+        restoreValues(backup);
+        throw;
+    }
+    
     return *this;
 }
 
@@ -220,13 +255,23 @@ GString& GString::operator+=(const GString& s2)
  * Pushes character c to the end of the char array
  * No preconditions, character assumed to be valid.
  * Postcondition: Modified GString passes its invariant
+ * Strong exception guarantee
  */
 void GString::push_back(const Character c)
 {
+    const GString backup(*this);
+    
     fitMoreCharacters(1);
     chars[size] = c;
     ++size;
-    check();
+    
+    try {check();}
+    catch (...)
+    {
+        //On postcondition fail restore original values
+        restoreValues(backup);
+        throw;
+    }
 }
 
 /*
@@ -234,15 +279,26 @@ void GString::push_back(const Character c)
  * Precondition: GString has characters in it. If it's not true,
  *      no modifications are made and 0 is returned
  * Postcondition: Modified GString passes its invariant
+ * strong exception guarantee
  */
 const Character GString::pop_back()
 {
     if (size == 0)
         return 0;
+    
+    const GString backup(*this);
+    
     Character c = chars[size - 1];
     --size;
     shrinkCharContainer();
-    check();
+    
+    try {check();}
+    catch(...)
+    {
+        restoreValues(backup);
+        throw;
+    }
+    
     return c;
 }
 
@@ -258,6 +314,8 @@ void GString::insert(StringSize pos, const GString& string)
     if (pos < 0 || pos > size)
         throw std::out_of_range("Can't insert out of range");
     
+    const GString backup(*this);
+    
     fitMoreCharacters(string.size);
     size += string.size;
     for (StringSize i = size - 1; i >= pos; --i)
@@ -267,7 +325,13 @@ void GString::insert(StringSize pos, const GString& string)
     }
     for (StringSize i = 0; i < string.size; ++i)
         chars[i + pos] = string[i];
-    check();
+    
+    try {check();}
+    catch(...)
+    {
+        restoreValues(backup);
+        throw;
+    }
 }
 
 /*
@@ -280,6 +344,8 @@ void GString::insert(StringSize pos, const Character c)
     if (pos < 0 || pos > size)
         throw std::out_of_range("Can't insert out of range");
     
+    const GString backup(*this);
+
     fitMoreCharacters(1);
     ++size;
     for (int i = size - 1; i >= pos; --i)
@@ -288,13 +354,20 @@ void GString::insert(StringSize pos, const Character c)
         if (i == 0) break;
     }
     chars[pos] = c;
-    check();
+
+    try {check();}
+    catch(...)
+    {
+        restoreValues(backup);
+        throw;
+    }
 }
 
 /*
  * Erases character from index start, end, and any characters inbetween
  * Precondition: start and end within range, start is less than or equal to end
  * Postcondition: modified GString passes the invariant
+ * Strong exception guarantee
  */
 void GString::erase(StringSize start, StringSize end)
 {
@@ -303,11 +376,19 @@ void GString::erase(StringSize start, StringSize end)
     if (start > end)
         throw std::domain_error("For 'erase' first argument must be less than second argument");
     
+    const GString backup(*this);
+    
     for (int i = end + 1; i < size; ++i)
         chars[i - end - 1 + start] = chars[i];
     size -= end - start + 1;
     shrinkCharContainer();
-    check();
+
+    try {check();}
+    catch(...)
+    {
+        restoreValues(backup);
+        throw;
+    }
 }
 
 /*
@@ -317,6 +398,7 @@ void GString::erase(StringSize start, StringSize end)
  */
 std::ostream& operator<<(std::ostream& os, const GString& obj)
 {
+    obj.check();
     for (Character c : obj)
         os << c;
     return os;
@@ -334,8 +416,9 @@ bool isWhiteSpace(Character c)
 /*
  * Construct GString from the input stream. Whitespace ends GString construction
  * (constructed GString don't contain whitespace, whitespace separates GStrings)
- * No precondition, inut stream assumed to be valid
- * Postconidition: constructed GString passes its invariant
+ * No precondition, input stream assumed to be valid
+ * Postcondition: constructed GString passes its invariant
+ * Basic exception guarantee
  */
 std::istream& operator>>(std::istream& is, GString& obj)
 {
@@ -353,11 +436,14 @@ std::istream& operator>>(std::istream& is, GString& obj)
 
 /*
  * Swaps content of two GString references
- * No precondition, check validity as postcondition
- * Postcondition: swapped GStrings pass their invariant
+ * Precondition: GStrings to be swapped pass their invariant
+ * No postcondition, it's assumed that swapped strings are valid if they're valid before swap
  */
 void swap (GString& s1, GString& s2)
 {
+    s1.check();
+    s2.check();
+
     Character* chars = s1.chars;
     s1.chars = s2.chars;
     s2.chars = chars;
@@ -369,9 +455,6 @@ void swap (GString& s1, GString& s2)
     StringSize space = s1.space;
     s1.space = s2.space;
     s2.space = space;
-    
-    s1.check();
-    s2.check();
 }
 
 /*
@@ -381,6 +464,9 @@ void swap (GString& s1, GString& s2)
  */
 bool operator<(GString const& a, GString const& b)
 {
+    a.check();
+    b.check();
+    
     int minSize = (a.getSize() < b.getSize()) ? a.getSize() : b.getSize();
     for (StringSize i = 0; i < minSize; i++)
     {

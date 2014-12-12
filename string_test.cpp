@@ -52,8 +52,6 @@ test(indexOutOfRange, td)
     const GString gstring = "hello";
     expectException(Character c = gstring[-1], std::out_of_range, td)
     expectException(Character c = gstring[5], std::out_of_range, td)
-    endExpectException
-    endExpectException
 }
 
 test(changeCharacterAtIndex, td)
@@ -68,7 +66,6 @@ test(changeCharacterAtIndex, td)
 test(cantChangeCharacterOutOfRange, td)
     const GString string = "hello";
     expectException(string[5] = 'c', std::out_of_range, td)
-    endExpectException
 }
 
 test(assigningGStringCopiesIt, td)
@@ -86,8 +83,6 @@ test(cantAccessAnyCharacterOnEmptyString, td)
     td.check<int>(string.getSize(), 0);
     expectException(Character c = string[0], std::out_of_range, td)
     expectException(Character c = string[1], std::out_of_range, td)
-    endExpectException
-    endExpectException
 }
 
 test(sumOfStrings, td)
@@ -286,16 +281,12 @@ test(insertFail, td)
     GString string = "string";
     expectException(string.insert(-1, "fail"), std::out_of_range, td)
     expectException(string.insert(7, "fail"), std::out_of_range, td)
-    endExpectException
-    endExpectException
 }
 
 test(insertFail2, td)
     GString string = "string";
     expectException(string.insert(-1, 'x'), std::out_of_range, td)
     expectException(string.insert(7, 'x'), std::out_of_range, td)
-    endExpectException
-    endExpectException
 }
 
 test(eraseStuff, td)
@@ -320,20 +311,17 @@ test(eraseStuff3, td)
 test(eraseFail, td)
     GString string = "0123456789";
     expectException(string.erase(5, 3), std::domain_error, td)
-    endExpectException
 }
 
 test(eraseFail2, td)
     GString string = "0123456789";
     //if StringSize is unsigned, domain_error is thrown instead of out_of_range. just check if any exception is thrown    
     expectException(string.erase(-1, 5), std::exception, td)
-    endExpectException
 }
 
 test(eraseFail3, td)
     GString string = "0123456789";
     expectException(string.erase(8, 10), std::out_of_range, td)
-    endExpectException
 }
 
 test(eraseEverything, td)

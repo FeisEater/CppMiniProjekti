@@ -46,6 +46,7 @@ class GString
         void shrinkCharContainer();
         void replaceCharContainer(StringSize newSize);
         void setDefaultValues();
+        void restoreValues(const GString& backup);
         
         StringSize size;    //size of GString
         StringSize space;   //space allocated for char array

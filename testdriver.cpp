@@ -7,15 +7,16 @@ using namespace std;
         ++testsFailed; \
         cout << info; \
         failLog << info; \
-        runTests(testCounter + 1, tests);
+        continueFrom(testCounter + 1);
 
-void testdriver::runTests(int testCounter, testContainer tests)
+//run test starting from the specified part of the container
+void testdriver::continueFrom(int testCounter)
 {
     try
     {
         for (; testCounter < tests.size(); testCounter++)
         {
-            tests[testCounter]();
+            tests[testCounter]();   //test_fail exceptions caught here
             cout << curTestName << " passed" << endl;
         }
         cout << endl;
@@ -25,22 +26,25 @@ void testdriver::runTests(int testCounter, testContainer tests)
             cout << testsFailed << " tests faileds!!! Fix the following:" << endl << endl << failLog.str();
         cout << endl;
     }
-    catch(testfail const& e)
+    catch(testfail const& e)    //straight-forward test failures
     {
         failTestAndPrint(curTestName << " failed: " << e.failReason() << endl)
     }
-    catch(exception const& e)
+    catch(exception const& e)   //unexpected exceptions
     {
         failTestAndPrint(curTestName << " failed, code threw following exception: " << e.what() << endl)
     }
-    catch( ... )
+    catch( ... )    //anything else that can be caught
     {
         failTestAndPrint(curTestName << " failed, code threw unknown exception" << endl)
     }
 }
 
-void testdriver::runTests(testContainer tests)
+//call this to run tests from the beginning
+void testdriver::runTests(testContainer tc)
 {
+    tests = tc;
     testsFailed = 0;
-    runTests(0, tests);
+    failLog.str("");
+    continueFrom(0);
 }
