@@ -2,6 +2,7 @@
 
 using namespace std;
 
+//macro to increase failure count, print info to cout and failLog, and continue with the tests
 #define failTestAndPrint(info) \
         ++testsFailed; \
         cout << info; \

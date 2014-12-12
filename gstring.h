@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <exception>
 
+//Thrown when assert called on condition that fails
 class assertion_fail: public std::exception
 {
     public:
@@ -22,6 +23,7 @@ class assertion_fail: public std::exception
         const char* info;
 };
 
+//Assertion macro
 #ifdef NDEBUG
     #define assert(b, msg) ;
 #else
@@ -29,9 +31,12 @@ class assertion_fail: public std::exception
         if (!(b)) throw assertion_fail(msg);
 #endif
 
+//Character type of which GString consists of
 typedef char Character;
+//Type for GString's size and index of char array
 typedef unsigned int StringSize;
 
+//GString will not allocate less than this amount of memory for characters
 const StringSize minSize = 11;
 
 class GString
@@ -40,36 +45,51 @@ class GString
         void fitMoreCharacters(StringSize additionalChars);
         void shrinkCharContainer();
         void replaceCharContainer(StringSize newSize);
-        StringSize size;
-        StringSize space;
-        Character* chars;
+        void setDefaultValues();
         
+        StringSize size;    //size of GString
+        StringSize space;   //space allocated for char array
+        Character* chars;   //char array
+        
+        //Iterator class holds char array index
         class Iterator
         {
         private:
-            const GString& string;
-            StringSize index;
+            const GString& string;  //always reference to this GString
+            StringSize index;       //index of GString's char array
             void checkIndex();
         public:
+            //Constructor
             Iterator(const GString& str, StringSize i) : string(str), index(i) {}
+            //Copy constructor
             Iterator(Iterator const& it) : string(it.string), index(it.index) {}
+            
             Character& operator*();
             Character* operator->();
             Iterator& operator++();
             Iterator operator++(int);
             friend bool operator==(Iterator const& a, Iterator const& b) {return a.index == b.index;}
             friend bool operator!=(Iterator const& a, Iterator const& b) {return !(a == b);}
-        };    
+        };
+        
     public:
+        //Default constructor
         GString() : size(0), space(minSize), chars(new Character[minSize]) {check();}
+        //Copy constructor
         GString(GString const& string);
+        //Move constructor
         GString(GString&& string);
+        //Type conversion from c_string
         GString(const char* s);
+        //Destructor
         ~GString() {delete[] chars;}
-        StringSize getSize() const   {return size;}
-        Character &operator[](StringSize i) const;
+        //Copy assignment
         GString& operator=(GString const& string);
+        //Move assignment
         GString& operator=(GString&& string);
+        
+        StringSize getSize() const   {return size;} //return size of GString
+        Character &operator[](StringSize i) const;
         friend GString operator+(const GString& s1, const GString& s2);
         GString& operator+=(const GString& s2);
         void push_back(const Character c);
@@ -79,12 +99,12 @@ class GString
         void erase(StringSize start, StringSize end);
         friend std::istream& operator>>(std::istream& is, GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj);
-        Iterator begin() const {return Iterator(*this, 0);}
-        Iterator end() const {return Iterator(*this, size);}
-        Iterator begin() {return Iterator(*this, 0);}
-        Iterator end() {return Iterator(*this, size);}
         friend void swap (GString& s1, GString& s2);
-        void check();
+
+        Iterator begin() const {return Iterator(*this, 0);}     //Iterator to first character
+        Iterator end() const {return Iterator(*this, size);}    //Iterator to one beyond last character
+
+        void check() const;
 
 };
 

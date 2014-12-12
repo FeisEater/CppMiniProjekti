@@ -15,14 +15,21 @@
 #include <sstream>
 #include "nvwa/debug_new.h"
 
+/*
+ * Macro for declaring test function, also passes test name to testdriver, which is same as function name in code
+ * testname - name of the test both in source code and in runtime
+ * td - testdriver instance
+*/
 #define test(testname, td) void testname() { td.setTestName(#testname);
 
+//Abstract class for test failure exception
 class testfail: public std::exception
 {
     public:
         virtual std::string failReason() const {return "this shouldn't be returned";}
 };
 
+//Exception for unexpected values from test
 template <typename Type>
 class equalityFail: public testfail
 {
@@ -38,6 +45,7 @@ public:
     const Type realValue;
 };
 
+//Exception for failing when expecting an exception
 class exceptionDidntHappen: public testfail
 {
 public:
@@ -52,6 +60,7 @@ public:
     std::string executedCode;
 };
 
+//typedef for vector for function pointers, ie test container
 typedef std::vector<void (*)()> testContainer;
 
 class testdriver
@@ -59,8 +68,11 @@ class testdriver
     public:
         void runTests(int testCounter, testContainer tests);
         void runTests(testContainer tests);
+        
         std::string getTestName() {return curTestName;}
         void setTestName(std::string testName) {curTestName = testName;}
+        
+        //Expecting for real value to be same as expected value
         template <typename Type>
         void check(const Type& realValue, const Type& expectedValue)
         {
@@ -69,11 +81,17 @@ class testdriver
         }
 
     private:
-        std::string curTestName;
-        int testsFailed;
-        std::stringstream failLog;
+        std::string curTestName;    //name of the test currently runnning
+        int testsFailed;    //amount of tests that failed
+        std::stringstream failLog;  //Reprint results of failed tests at the end of the run
 };
 
+/*
+ * macro for expecting exception from code invokation
+ * code - invoked code
+ * exc - exception that we're expecting
+ * td - testdriver instance
+*/
 #define expectException(code, exc, td) \
     try \
     { \
@@ -83,6 +101,7 @@ class testdriver
     catch (exc const& e) \
     {
 
+//remove this maybe?
 #define endExpectException \
         return; \
     }
