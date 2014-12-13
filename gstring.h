@@ -101,7 +101,9 @@ class GString
         friend std::istream& operator>>(std::istream& is, GString& obj);
         friend std::ostream& operator<<(std::ostream& os, const GString& obj);
         friend void swap (GString& s1, GString& s2);
-
+        char* to_C_string();
+        bool hasSubstring(const GString& sub);
+        
         Iterator begin() const {return Iterator(*this, 0);}     //Iterator to first character
         Iterator end() const {return Iterator(*this, size);}    //Iterator to one beyond last character
 

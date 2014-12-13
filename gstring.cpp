@@ -477,6 +477,38 @@ bool operator<(GString const& a, GString const& b)
 }
 
 /*
+ * Returns CString representation of this GString
+ * No precondition
+ * Postcondition: returned string has null termination at expected spot
+ * Note: if GString contained null characters in the middle, they will remain in CString
+ */ 
+char* GString::to_C_string()
+{
+    char* result = new char[size + 1];
+    char* currentPointer;
+    currentPointer = result;
+    for (Character c : *this)
+    {
+        *currentPointer = c;
+        ++currentPointer;
+    }
+    *currentPointer = '\0';
+    
+    //Postcondition
+    if (result[size] != '\0')
+    {
+        delete[] result;
+        throw std::length_error("No null character at expected position");
+    }
+    return result;
+}
+
+bool GString::hasSubstring(const GString& sub)
+{
+    return false;
+}
+
+/*
  * Prepares introduction of given amount of characters by increasing the char array if necessary
  */
 void GString::fitMoreCharacters(StringSize additionalChars)
@@ -513,7 +545,7 @@ void GString::replaceCharContainer(StringSize newSize)
 }
 
 /*
- * Checks GString invariant, throws assetion_fail
+ * Checks GString invariant, throws assertion_fail
  */
 void GString::check() const
 {

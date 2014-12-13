@@ -330,6 +330,75 @@ test(eraseEverything, td)
     td.check<GString>(string, "");
 }
 
+test(cstring, td)
+    GString string = "hello";
+    const char* c;
+    try
+    {
+        c = string.to_C_string();
+        td.check<char>(c[0], 'h');
+        td.check<char>(c[1], 'e');
+        td.check<char>(c[2], 'l');
+        td.check<char>(c[3], 'l');
+        td.check<char>(c[4], 'o');
+        td.check<char>(c[5], '\0');
+        delete[] c;
+    }
+    catch(...)  {delete[] c; throw;}
+}
+
+test(cstring2, td)
+    GString string;
+    const char* c;
+    try
+    {
+        c = string.to_C_string();
+        td.check<char>(c[0], '\0');
+        delete[] c;
+    }
+    catch(...)  {delete[] c; throw;}
+}
+
+test(subString, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("cat"), true);
+}
+
+test(subString2, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("cte"), false);
+}
+
+test(subString3, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("dog"), false);
+}
+
+test(subString4, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("tac"), false);
+}
+
+test(subString5, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("con"), true);
+}
+
+test(subString6, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("ate"), true);
+}
+
+test(subString7, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring(""), true);
+}
+
+test(subString8, td)
+    GString string = "concatenate";
+    td.check<bool>(string.hasSubstring("concatenate"), true);
+}
+
 void runTests()
 {
     td.runTests({
@@ -378,6 +447,16 @@ void runTests()
         eraseFail,
         eraseFail2,
         eraseFail3,
-        eraseEverything
+        eraseEverything,
+        cstring,
+        cstring2,
+        subString,
+        subString2,
+        subString3,
+        subString4,
+        subString5,
+        subString6,
+        subString7,
+        subString8,
     });
 }
