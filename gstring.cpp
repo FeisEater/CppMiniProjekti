@@ -90,7 +90,7 @@ GString::GString(GString&& string)
     }
     
 #ifndef NDEBUG
-    std::cout << "Move constructor called" << std::endl;
+    std::cout << "   -Move constructor called" << std::endl;
 #endif
 }
 
@@ -187,7 +187,7 @@ GString& GString::operator=(GString&& string)
     string.chars = nullptr;
 
 #ifndef NDEBUG
-    std::cout << "Move assignment called" << std::endl;
+    std::cout << "   -Move assignment called" << std::endl;
 #endif
 
     return *this;
@@ -562,7 +562,7 @@ void GString::shrinkCharContainer()
 void GString::replaceCharContainer(StringSize newSize)
 {
 #ifndef NDEBUG
-    std::cout << "Changed chararray length from " << space;
+    std::cout << "   -Changed chararray length from " << space;
 #endif
 
     Character* oldchars = chars;
