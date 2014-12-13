@@ -10,6 +10,7 @@
 #include "gstring.h"
 #include <iostream>
 #include <vector>
+#include "nvwa/debug_new.h"
 /*
  * 
  */

@@ -13,7 +13,6 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "nvwa/debug_new.h"
 
 /*
  * Macro for declaring test function, also passes test name to testdriver, which is same as function name in code
