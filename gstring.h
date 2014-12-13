@@ -83,7 +83,7 @@ class GString
         //Type conversion from c_string
         GString(const char* s);
         //Destructor
-        ~GString() {delete[] chars;}
+        //~GString() {delete[] chars;}
         //Copy assignment
         GString& operator=(GString const& string);
         //Move assignment
