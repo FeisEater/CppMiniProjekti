@@ -31,6 +31,7 @@ class assertion_fail: public std::exception
         if (!(b)) throw assertion_fail(msg);
 #endif
 
+
 //Character type of which GString consists of
 typedef char Character;
 //Type for GString's size and index of char array

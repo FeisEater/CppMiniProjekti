@@ -6,11 +6,6 @@
  */
 
 #include "string_test.h"
-//remove these later
-#include "gstring.h"
-#include <iostream>
-#include <vector>
-//but not this
 #include "nvwa/debug_new.h"
 /*
  * 

@@ -14,13 +14,6 @@
 #include <vector>
 #include <sstream>
 
-/*
- * Macro for declaring test function, also passes test name to testdriver, which is same as function name in code
- * testname - name of the test both in source code and in runtime
- * td - testdriver instance
-*/
-#define test(testname, td) void testname() { td.setTestName(#testname);
-
 //Abstract class for test failure exception
 class testfail: public std::exception
 {
@@ -59,6 +52,7 @@ public:
     std::string executedCode;
 };
 
+
 //typedef for vector for function pointers, ie test container
 typedef std::vector<void (*)()> testContainer;
 
@@ -85,6 +79,13 @@ class testdriver
         int testsFailed;    //amount of tests that failed
         std::stringstream failLog;  //Reprint results of failed tests at the end of the run
 };
+
+/*
+ * Macro for declaring test function, also passes test name to testdriver, which is same as function name in code
+ * testname - name of the test both in source code and in runtime
+ * td - testdriver instance
+*/
+#define test(testname, td) void testname() { td.setTestName(#testname);
 
 /*
  * macro for expecting exception from code invokation

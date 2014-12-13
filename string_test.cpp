@@ -196,7 +196,7 @@ test(lessThan4, td)
 test(stlSort, td)
     std::vector<GString> v = {"apple", "orange", "pear", "sandwich", "zoidberg", "orangutang", "chocolate"};
     std::vector<GString> ordered = {"apple", "chocolate", "orange", "orangutang", "pear", "sandwich", "zoidberg"};
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 50; i++)
     {
         std::random_shuffle(v.begin(), v.end());
         std::sort(v.begin(), v.end());
@@ -428,7 +428,7 @@ void runTests()
         lessThan2,
         lessThan3,
         lessThan4,
-        stlSort,
+        stlSort,    //if ndebug is not defined, comment this out if you're sick of move construction and assignment reports
         stringFunctionAlsoTakesLiteral,
         pushBack,
         pushBack2,

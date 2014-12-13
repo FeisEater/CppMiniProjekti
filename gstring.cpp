@@ -1,6 +1,4 @@
 #include "gstring.h"
-//delete this
-#include <iostream>
 
 //helper function: return either a or b based on which is bigger
 StringSize max(StringSize a, StringSize b)
@@ -90,6 +88,10 @@ GString::GString(GString&& string)
         setDefaultValues();
         throw;
     }
+    
+#ifndef NDEBUG
+    std::cout << "Move constructor called" << std::endl;
+#endif
 }
 
 /*
@@ -183,6 +185,11 @@ GString& GString::operator=(GString&& string)
     space = string.space;
     chars = string.chars;
     string.chars = nullptr;
+
+#ifndef NDEBUG
+    std::cout << "Move assignment called" << std::endl;
+#endif
+
     return *this;
 }
 
@@ -227,7 +234,7 @@ GString operator+(const GString& s1, const GString& s2)
 /*
  * Modifies this GString by concatinating s2 into it
  * Precondition: s2 passes its invariant
- * Postcindition: this GString passes its invariant
+ * Postcondition: this GString passes its invariant
  * Strong exception guarantee
  */
 GString& GString::operator+=(const GString& s2)
@@ -503,8 +510,26 @@ char* GString::to_C_string()
     return result;
 }
 
+/*
+ * True if this string contains given substring
+ * Precondition: given GString is valid
+ * No postcondition, no modification
+ */
 bool GString::hasSubstring(const GString& sub)
 {
+    sub.check();
+    
+    if (sub == "")  return true; //Every string contains an empty string as substring
+    StringSize i = 0;
+    for (Character c : *this)
+    {
+        if (c == sub[i])
+        {
+            ++i;
+            if (i == sub.size)  return true;
+        }
+        else    i = 0;
+    }
     return false;
 }
 
@@ -536,12 +561,20 @@ void GString::shrinkCharContainer()
  */
 void GString::replaceCharContainer(StringSize newSize)
 {
+#ifndef NDEBUG
+    std::cout << "Changed chararray length from " << space;
+#endif
+
     Character* oldchars = chars;
     space = newSize;
     chars = new Character[space];
     for (int i = 0; i < size; ++i)
         chars[i] = oldchars[i];
     delete[] oldchars;
+    
+#ifndef NDEBUG
+    std::cout << " to " << space << std::endl;
+#endif
 }
 
 /*
