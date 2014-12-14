@@ -42,13 +42,16 @@ GString::GString(GString const& string)
         throw;
     }
     
-    size = string.size;
-    space = max(size * 2, minSize);
-    chars = new Character[space];
-    for (StringSize i = 0; i < string.size; i++)
-        chars[i] = string.chars[i];
-    
-    try {check();}
+    try
+    {
+        size = string.size;
+        space = max(size * 2, minSize);
+        chars = new Character[space];
+        for (StringSize i = 0; i < string.size; i++)
+            chars[i] = string.chars[i];
+
+        check();
+    }
     catch(...)
     {
         //Postcondition fail, cleanup and default constructor functionality
@@ -75,12 +78,15 @@ GString::GString(GString&& string)
         throw;
     }
     
-    size = string.size;
-    space = string.space;
-    chars = string.chars;
-    string.chars = nullptr;
+    try
+    {
+        size = string.size;
+        space = string.space;
+        chars = string.chars;
+        string.chars = nullptr;
 
-    try {check();}
+        check();
+    }
     catch(...)
     {
         //Postcondition fail, cleanup and default constructor functionality
@@ -102,24 +108,27 @@ GString::GString(GString&& string)
  */
 GString::GString(const char* s)
 {
-    //first count the size
-    size = 0;
-    const char *curChar = s;
-    while (*curChar)
+    try
     {
-        ++curChar;
-        ++size;
-    }
-    //then insert the characters
-    space = max(size * 2, minSize);
-    chars = new Character[space];
-    for (StringSize i = 0; i < size; i++)
-    {
-        chars[i] = *s;
-        ++s;
-    }
+        //first count the size
+        size = 0;
+        const char *curChar = s;
+        while (*curChar)
+        {
+            ++curChar;
+            ++size;
+        }
+        //then insert the characters
+        space = max(size * 2, minSize);
+        chars = new Character[space];
+        for (StringSize i = 0; i < size; i++)
+        {
+            chars[i] = *s;
+            ++s;
+        }
 
-    try {check();}
+        check();
+    }
     catch(...)
     {
         //Postcondition fail, cleanup and default constructor functionality
@@ -152,14 +161,16 @@ GString& GString::operator=(GString const& string)
     string.check(); //On fail throw exception and go no further
     
     const GString backup(*this);
-    
-    fitMoreCharacters(string.size - size);
-    size = string.size;
-    shrinkCharContainer();
-    for (StringSize i = 0; i < string.size; i++)
-        chars[i] = string[i];
-    
-    try {check();}
+    try
+    {
+        fitMoreCharacters(string.size - size);
+        size = string.size;
+        shrinkCharContainer();
+        for (StringSize i = 0; i < string.size; i++)
+            chars[i] = string[i];
+
+        check();
+    }
     catch (...)
     {
         //On postcondition fail restore original values
@@ -242,12 +253,15 @@ GString& GString::operator+=(const GString& s2)
     s2.check();
     
     const GString backup(*this);
-    fitMoreCharacters(s2.size);
-    for (int i = 0; i < s2.size; ++i)
-        chars[i + size] = s2[i];
-    size += s2.size;
-    
-    try {check();}
+    try
+    {
+        fitMoreCharacters(s2.size);
+        for (int i = 0; i < s2.size; ++i)
+            chars[i + size] = s2[i];
+        size += s2.size;
+
+        check();
+    }
     catch (...)
     {
         //On postcondition fail restore original values
@@ -267,12 +281,14 @@ GString& GString::operator+=(const GString& s2)
 void GString::push_back(const Character c)
 {
     const GString backup(*this);
-    
-    fitMoreCharacters(1);
-    chars[size] = c;
-    ++size;
-    
-    try {check();}
+    try
+    {
+        fitMoreCharacters(1);
+        chars[size] = c;
+        ++size;
+
+        check();
+    }
     catch (...)
     {
         //On postcondition fail restore original values
@@ -294,12 +310,15 @@ const Character GString::pop_back()
         return 0;
     
     const GString backup(*this);
-    
-    Character c = chars[size - 1];
-    --size;
-    shrinkCharContainer();
-    
-    try {check();}
+    Character c;
+    try
+    {
+        c = chars[size - 1];
+        --size;
+        shrinkCharContainer();
+
+        check();
+    }
     catch(...)
     {
         restoreValues(backup);
@@ -322,18 +341,20 @@ void GString::insert(StringSize pos, const GString& string)
         throw std::out_of_range("Can't insert out of range");
     
     const GString backup(*this);
-    
-    fitMoreCharacters(string.size);
-    size += string.size;
-    for (StringSize i = size - 1; i >= pos; --i)
+    try
     {
-        chars[i + string.size] = chars[i];
-        if (i == 0) break;
+        fitMoreCharacters(string.size);
+        size += string.size;
+        for (StringSize i = size - 1; i >= pos; --i)
+        {
+            chars[i + string.size] = chars[i];
+            if (i == 0) break;
+        }
+        for (StringSize i = 0; i < string.size; ++i)
+            chars[i + pos] = string[i];
+
+        check();
     }
-    for (StringSize i = 0; i < string.size; ++i)
-        chars[i + pos] = string[i];
-    
-    try {check();}
     catch(...)
     {
         restoreValues(backup);
@@ -352,17 +373,19 @@ void GString::insert(StringSize pos, const Character c)
         throw std::out_of_range("Can't insert out of range");
     
     const GString backup(*this);
-
-    fitMoreCharacters(1);
-    ++size;
-    for (int i = size - 1; i >= pos; --i)
+    try
     {
-        chars[i + 1] = chars[i];
-        if (i == 0) break;
-    }
-    chars[pos] = c;
+        fitMoreCharacters(1);
+        ++size;
+        for (int i = size - 1; i >= pos; --i)
+        {
+            chars[i + 1] = chars[i];
+            if (i == 0) break;
+        }
+        chars[pos] = c;
 
-    try {check();}
+        check();
+    }
     catch(...)
     {
         restoreValues(backup);
@@ -384,13 +407,15 @@ void GString::erase(StringSize start, StringSize end)
         throw std::domain_error("For 'erase' first argument must be less than second argument");
     
     const GString backup(*this);
-    
-    for (int i = end + 1; i < size; ++i)
-        chars[i - end - 1 + start] = chars[i];
-    size -= end - start + 1;
-    shrinkCharContainer();
+    try
+    {
+        for (int i = end + 1; i < size; ++i)
+            chars[i - end - 1 + start] = chars[i];
+        size -= end - start + 1;
+        shrinkCharContainer();
 
-    try {check();}
+        check();
+    }
     catch(...)
     {
         restoreValues(backup);

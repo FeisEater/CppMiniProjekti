@@ -77,6 +77,14 @@ test(assigningGStringCopiesIt, td)
     td.check<GString>(string2, "hallo");
 }
 
+test(cpConstructingGStringCopiesIt, td)
+    const GString string = "hello";
+    GString string2(string);
+    string2[1] = 'a';
+    td.check<GString>(string, "hello");
+    td.check<GString>(string2, "hallo");
+}
+
 test(cantAccessAnyCharacterOnEmptyString, td)
     const GString string = "";
     td.check<GString>(string, "");
@@ -413,6 +421,7 @@ void runTests()
         changeCharacterAtIndex,
         cantChangeCharacterOutOfRange,
         assigningGStringCopiesIt,
+        cpConstructingGStringCopiesIt,
         cantAccessAnyCharacterOnEmptyString,
         sumOfStrings,
         sumOfStrings2,
