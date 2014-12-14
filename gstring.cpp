@@ -489,7 +489,7 @@ bool operator<(GString const& a, GString const& b)
  * Postcondition: returned string has null termination at expected spot
  * Note: if GString contained null characters in the middle, they will remain in CString
  */ 
-char* GString::to_C_string()
+char* GString::to_C_string() const
 {
     char* result = new char[size + 1];
     char* currentPointer;
@@ -553,7 +553,7 @@ void GString::shrinkCharContainer()
             replaceCharContainer(minSize);
     }
     else if (space > size * minSize)
-        replaceCharContainer(2 * size);
+        replaceCharContainer(max(size * 2, minSize));
 }
 
 /*

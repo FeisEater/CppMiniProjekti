@@ -331,7 +331,7 @@ test(eraseEverything, td)
 }
 
 test(cstring, td)
-    GString string = "hello";
+    const GString string = "hello";
     const char* c;
     try
     {
@@ -348,7 +348,7 @@ test(cstring, td)
 }
 
 test(cstring2, td)
-    GString string;
+    const GString string;
     const char* c;
     try
     {
